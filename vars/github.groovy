@@ -7,33 +7,36 @@ def pullRequestComment(pullRequestId, message) {
 }
 
 def buildStartedComment() {
-  def message = ":rocket: Build [${CHANGE_ID}-${BUILD_ID}](${BUILD_URL}) started!"
+  def buildId = "${BUILD_KEY}-${BRANCH_NAME}-${BUILD_ID}".replaceAll('/','-')
+  def message = ":rocket: Build [${buildId}](${BUILD_URL}) started!"
   
   pullRequestComment(CHANGE_ID, message)
 }
 
 def buildSuccessfullComment() {
   def buildDir = "${BUILD_KEY}-${BRANCH_NAME}-${BUILD_ID}".replaceAll('/','-')
-  def message = ":thumbsup: Build [${CHANGE_ID}-${BUILD_ID}](${BUILD_URL}) is successfull! The product is available [here](http://download.eclipse.org/capella/core/products/nightly/${buildDir})."
+  def message = ":thumbsup: Build [${buildDir}](${BUILD_URL}) is successfull! The product is available [here](http://download.eclipse.org/capella/core/products/nightly/${buildDir})."
   
   pullRequestComment(CHANGE_ID, message)
 }
 
 def buildFailedComment() {
-  def message = ":disappointed: Build [${CHANGE_ID}-${BUILD_ID}](${BUILD_URL}) failed!"
+  def buildId = "${BUILD_KEY}-${BRANCH_NAME}-${BUILD_ID}".replaceAll('/','-')
+  def message = ":disappointed: Build [${buildId}](${BUILD_URL}) failed!"
   
   pullRequestComment(CHANGE_ID, message)
 }
 
 def buildUnstableComment() {
   def buildDir = "${BUILD_KEY}-${BRANCH_NAME}-${BUILD_ID}".replaceAll('/','-')
-  def message = ":worried: Build [${CHANGE_ID}-${BUILD_ID}](${BUILD_URL}) is unstable! The product is available [here](http://download.eclipse.org/capella/core/products/nightly/${buildDir})."
+  def message = ":worried: Build [${buildDir}](${BUILD_URL}) is unstable! The product is available [here](http://download.eclipse.org/capella/core/products/nightly/${buildDir})."
   
   pullRequestComment(CHANGE_ID, message)
 }
 
 def buildAbortedComment() {
-  def message = ":neutral_face: Build [${CHANGE_ID}-${BUILD_ID}](${BUILD_URL}) has been aborted!"
+  def buildId = "${BUILD_KEY}-${BRANCH_NAME}-${BUILD_ID}".replaceAll('/','-')
+  def message = ":neutral_face: Build [${buildId}](${BUILD_URL}) has been aborted!"
   
   pullRequestComment(CHANGE_ID, message)
 }
