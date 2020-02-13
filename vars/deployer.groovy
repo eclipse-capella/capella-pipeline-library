@@ -20,7 +20,7 @@ def capellaNightlyUpdateSite(String inputPath, String outputDirName) {
 
 def cleanCapellaNightlyArtefacts(String dirName) {
   def productPath = getFullCapellaProductPath(dirName)
-  def updateSitePath = getFullCapellaUpdateSitePath(outputDirName)
+  def updateSitePath = getFullCapellaUpdateSitePath(dirName)
   def sshAccount = getSSHAccount()
   
   sshagent (['projects-storage.eclipse.org-bot-ssh']) {
