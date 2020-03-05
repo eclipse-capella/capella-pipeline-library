@@ -6,9 +6,14 @@ def getPullRequestId() {
   return "${BRANCH_NAME}".replace('PR-', '')
 }
 
+def getProjectName() {
+	return (GIT_URL =~ /[^\/]+(?=\.git$)/)[0]
+}
+
 def pullRequestComment(message) {
   def pullRequestId = getPullRequestId()
-  def apiURL = "https://api.github.com/repos/eclipse/capella/issues/${pullRequestId}/comments"
+	def projectName = getProjectName()
+  def apiURL = "https://api.github.com/repos/eclipse/${projectName}/issues/${pullRequestId}/comments"
   
   withCredentials([string(credentialsId: '0dea5761-867c-44db-92fa-9304c81a8653', variable: 'password')]) {
   	sh """curl ${apiURL} -d '{"body":"${message}"}' -u 'eclipse-capella-bot:${password}' -X POST -H 'Content-Type: application/json'"""
