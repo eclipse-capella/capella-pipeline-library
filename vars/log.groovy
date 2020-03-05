@@ -7,5 +7,5 @@ def warning(message) {
 }
 
 def error(message) {
-  echo "WARNING: ${message}"
+  echo "ERROR: ${message}"
 }
