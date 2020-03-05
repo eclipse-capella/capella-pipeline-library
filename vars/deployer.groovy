@@ -30,16 +30,53 @@ def cleanCapellaNightlyArtefacts(String dirName) {
  
 }
 
-def addonNightlyProduct(Enum parentDir, String inputArtefactPath) {
-  // TODO
+def addonNightlyDropins(String inputPath, String outputDirName) {
+  def addonDirName = getAddonDirName()
+	
+	if(addonDirName.isEmpty()) {
+		log.error("Deployment Error: ${GIT_URL} repository is not recognised")
+	}
+	else {		
+		def outputPath = getFullAddonDropinsPath(addonDirName, outputDirName)
+		def sshAccount = getSSHAccount()
+		
+		sshagent (['projects-storage.eclipse.org-bot-ssh']) {
+			sh "ssh ${sshAccount} mkdir -p ${outputPath}"
+			sh "scp -rp ${inputPath} ${sshAccount}:${outputPath}"
+		}
+	}
 }
 
-def addonNightlyDropins(String parentDir, String inputArtefactPath) {
-  // TODO
+def addonNightlyUpdateSite(String inputPath, String outputDirName) {
+    def addonDirName = getAddonDirName()
+	
+	if(addonDirName.isEmpty()) {
+		log.error("Deployment Error: ${GIT_URL} repository is not recognised")
+	}
+	else {		
+		def outputPath = getFullAddonDropinsUpdateSitePath(addonDirName, outputDirName)
+		def sshAccount = getSSHAccount()
+		
+		sshagent (['projects-storage.eclipse.org-bot-ssh']) {
+			sh "ssh ${sshAccount} mkdir -p ${outputPath}"
+			sh "scp -rp ${inputPath} ${sshAccount}:${outputPath}"
+		}
+	}
 }
 
-def addonNightlyUpdateSite(Enum parentDir, String inputArtefactPath) {
-  // TODO
+
+/**
+ * Extracts the addon directory name from the git branch.
+ */
+private def getAddonDirName() {
+	switch(GIT_URL){
+		
+		case ~/.*capella-sss-transition.*/:
+				return 'subsystemtransition'
+		
+		default:
+				return ''
+	}
 }
 
 private def getSSHAccount() {
@@ -52,4 +89,12 @@ private def getFullCapellaProductPath(String dirName) {
 
 private def getFullCapellaUpdateSitePath(String dirName) {
   return "/home/data/httpd/download.eclipse.org/capella/core/updates/nightly/${dirName}/"
+}
+
+private def getFullAddonDropinsPath(String addonDirName, String dirName) {
+	return "/home/data/httpd/download.eclipse.org/capella/addons/${addonDirName}/dropins/nightly/${dirName}/"
+}
+
+private def getFullAddonDropinsUpdateSitePath(String rootDirName, String dirName) {
+	return "/home/data/httpd/download.eclipse.org/capella/addons/${addonDirName}/updates/nightly/${dirName}/"
 }
