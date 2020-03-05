@@ -29,3 +29,19 @@ def getDownloadURL(branch = "master", platform = "win", proxy = ""){
 
   return url + zipName
 }
+
+def getUpdateSiteURL(branch = "master") {
+	return "https://download.eclipse.org/capella/core/updates/nightly/${branch}/"
+}
+
+def getTestUpdateSiteURL(branch = "master") {
+	return getUpdateSiteURL(branch) + "org.polarsys.capella.test.site/"
+}
+
+def getRCPUpdateSiteURL(branch = "master") {
+	return getUpdateSiteURL(branch) + "org.polarsys.capella.rcp.site/"
+}
+
+def getEGFUpdateSiteURL(branch = "master") {
+	return getUpdateSiteURL(branch) + "org.polarsys.capella.egf.site/"
+}
