@@ -74,6 +74,15 @@ private def getAddonDirName() {
 		case ~/.*capella-sss-transition.*/:
 				return 'subsystemtransition'
 		
+		case ~/.*capella-cybersecurity.*/:
+				return 'cybersecurity'
+		
+		case ~/.*capella-requirements-vp.*/:
+				return 'requirements'
+		
+		case ~/.*capella-filtering.*/:
+				return 'filtering'
+		
 		default:
 				return ''
 	}
