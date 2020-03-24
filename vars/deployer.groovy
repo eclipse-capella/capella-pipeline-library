@@ -64,6 +64,22 @@ def addonNightlyUpdateSite(String inputPath, String outputDirName) {
 	}
 }
 
+def addonNightlyProduct(String inputPath, String outputDirName) {
+    def addonDirName = getAddonDirName()
+	
+	if(addonDirName.isEmpty()) {
+		log.error("Deployment Error: ${GIT_URL} repository is not recognised")
+	}
+	else {		
+		def outputPath = getFullAddonProductPath(addonDirName, outputDirName)
+		def sshAccount = getSSHAccount()
+		
+		sshagent (['projects-storage.eclipse.org-bot-ssh']) {
+			sh "ssh ${sshAccount} mkdir -p ${outputPath}"
+			sh "scp -rp ${inputPath} ${sshAccount}:${outputPath}"
+		}
+	}
+}
 
 /**
  * Extracts the addon directory name from the git branch.
@@ -106,4 +122,8 @@ private def getFullAddonDropinsPath(String addonDirName, String dirName) {
 
 private def getFullAddonDropinsUpdateSitePath(String rootDirName, String dirName) {
 	return "/home/data/httpd/download.eclipse.org/capella/addons/${addonDirName}/updates/nightly/${dirName}/"
+}
+
+private def getFullAddonProductPath(String rootDirName, String dirName) {
+	return "/home/data/httpd/download.eclipse.org/capella/addons/${addonDirName}/products/nightly/${dirName}/"
 }
