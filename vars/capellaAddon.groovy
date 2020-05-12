@@ -45,7 +45,16 @@ def call(body) {
 			      branches: [[name: "*/${env.BRANCH_NAME}"]],
 			      doGenerateSubmoduleConfigurations: false,
 			      extensions: [[$class: 'RelativeTargetDirectory',
-					    relativeTargetDir: pipelineParams.name]],
+					    relativeTargetDir: pipelineParams.name],
+					   [
+				$class: 'SubmoduleOption',
+				disableSubmodules: false,
+				parentCredentials: true,
+				recursiveSubmodules: true,
+				reference: '',
+				trackingSubmodules: true
+			    ]
+			],
 			      submoduleCfg: [], userRemoteConfigs: [[url: pipelineParams.url]]])
 		}
 	    }
@@ -65,11 +74,16 @@ def call(body) {
 
 
 	    stage ('Publish Nightly'){
-		when { !changeRequest() }
+		when {
+		    not {
+			changeRequest()
+		    }
+		}
+
 		steps {
 		    dir (pipelineParams.name) {
 			sshagent (['projects-storage.eclipse.org-bot-ssh']) {
-			    sh "../capella-releng-parent/scripts/deployAddonNightly.sh -n \"${pipelineParams.name}\" -b \"${pipelineParams.versionFolder}\""
+			    sh "releng/capella-releng-parent/scripts/deployAddonNightly.sh -n \"${pipelineParams.name}\" -b \"${pipelineParams.versionFolder}\""
 			}
 		    }
 		}
