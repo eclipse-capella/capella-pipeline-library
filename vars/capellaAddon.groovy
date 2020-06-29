@@ -68,7 +68,9 @@ def call(body) {
 
 	    stage ('Build') {
 		steps {
-		    sh "mvn --batch-mode -DpackagedSiteName=\"${pipelineParams.name}\" -f \"${pipelineParams.name}/pom.xml\" clean verify"
+		    wrap([$class: 'Xvnc', takeScreenshot: false, useXauthority: true]) {
+			sh "mvn --batch-mode -DpackagedSiteName=\"${pipelineParams.name}\" -f \"${pipelineParams.name}/pom.xml\" clean verify"
+		    }
 		}
 	    }
 
