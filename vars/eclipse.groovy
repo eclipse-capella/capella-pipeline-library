@@ -6,6 +6,10 @@ def installFeature(String targetProductPath, String featureRepository, String fe
 	sh "${targetProductPath} -repository ${featureRepository} -installIU ${featureName} -application org.eclipse.equinox.p2.director -noSplash"  
 }
 
+def installFeature(String targetProductPath, String featureRepository, String featureName, String vmargs) {
+	sh "${targetProductPath} -repository ${featureRepository} -installIU ${featureName} -application org.eclipse.equinox.p2.director -noSplash -vmargs ${vmargs}"
+}
+
 def addFeatureToTargetPlatform(targetPlatformPath, updateSitePath, featureName) {
   def updateSiteLocation = "location \"${updateSitePath}\" {\t${featureName}\n}"
   def tpFileContent = readFile targetPlatformPath
