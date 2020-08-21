@@ -12,7 +12,7 @@ private def getJunitCmdTemplate(String capellaProductPath, String applicationPar
   
   return "sleep 10 && " +
     "java " +
-      "-Xms1024m -Xmx3500m -XX:+CMSPermGenSweepingEnabled -XX:+CMSClassUnloadingEnabled -ea " +
+      "-Xms1024m -Xmx3500m -XX:+CMSClassUnloadingEnabled -ea " +
       "-Declipse.p2.data.area=@config.dir/../p2 " +
       "-Dfile.encoding=Cp1252 " +
       "-classpath ${capellaPath}/plugins/org.eclipse.equinox.launcher_*.jar org.eclipse.equinox.launcher.Main " +
