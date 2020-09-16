@@ -98,6 +98,9 @@ private def getAddonDirName() {
 		
 		case ~/.*capella-filtering.*/:
 				return 'filtering'
+				
+		case ~/.*capella-textual-editor.*/:
+			return 'textualscenario'
 		
 		default:
 				return ''
