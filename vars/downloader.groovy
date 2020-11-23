@@ -5,7 +5,7 @@ def downloadWindowsJDK(jdkWinFolder) {
   def jdkWinZip = 'jdkWin.zip'	
       
 	sh "curl -k -o ${jdkWinZip} ${jdkWinURL}"
-	sh "unzip ${jdkWinZip} -d ${jdkWinFolder}"
+	sh "unzip -q ${jdkWinZip} -d ${jdkWinFolder}"
 	sh "mv ${jdkWinFolder}/${jdk} ${jdkWinFolder}/jre"        
   
   println "Windows JDK dowloaded to ${jdkWinFolder}/jre"
@@ -20,7 +20,7 @@ def downloadLinuxJDK(jdkLinuxFolder) {
       
 	sh "curl -k -o ${jdkLinuxTar} ${jdkLinuxURL}"
 	sh "mkdir ${jdkLinuxFolder}"
-  sh "tar xzvf ${jdkLinuxTar} -C ${jdkLinuxFolder}"
+  sh "tar xzf ${jdkLinuxTar} -C ${jdkLinuxFolder}"
 	sh "mv ${jdkLinuxFolder}/${jdk} ${jdkLinuxFolder}/jre"
   
   println "Linux JDK downloaded to ${jdkLinuxFolder}/jre"    
@@ -35,7 +35,7 @@ def downloadMacJDK(jdkMacFolder) {
         
 	sh "curl -k -o ${jdkMacTar} ${jdkMacURL}"
 	sh "mkdir ${jdkMacFolder}"
-	sh "tar xzvf ${jdkMacTar} -C ${jdkMacFolder}"
+	sh "tar xzf ${jdkMacTar} -C ${jdkMacFolder}"
 	sh "mv ${jdkMacFolder}/${jdk}.jdk ${jdkMacFolder}/jre"
 
   println "Mac JDK downloaded to ${jdkMacFolder}/jre"
