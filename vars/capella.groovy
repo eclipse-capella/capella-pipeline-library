@@ -9,11 +9,11 @@ def getDownloadURL(branch = "master", platform = "win", proxy = ""){
 
   switch(platform){
       case ~/mac/:
-          regex = /(capella-[\d.]*-macosx-cocoa-x86_64.zip)/
+          regex = /(capella-[\d.]*-macosx-cocoa-x86_64.tar.gz)/
           break
       
       case ~/linux/:
-          regex = /(capella-[\d.]*-linux-gtk-x86_64.zip)/
+          regex = /(capella-[\d.]*-linux-gtk-x86_64.tar.gz)/
           break
           
       case ~/win/:
