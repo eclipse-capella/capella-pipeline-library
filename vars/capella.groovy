@@ -45,3 +45,5 @@ def getRCPUpdateSiteURL(branch = "master") {
 def getEGFUpdateSiteURL(branch = "master") {
 	return getUpdateSiteURL(branch) + "org.polarsys.capella.egf.site/"
 }
+
+// 
