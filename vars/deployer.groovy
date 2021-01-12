@@ -102,6 +102,9 @@ private def getAddonDirName() {
 		case ~/.*capella-textual-editor.*/:
 			return 'textualeditor'
 		
+		case ~/.*capella-deferred-merge.*/:
+			return 'deferredmerge'
+		
 		default:
 				return ''
 	}
