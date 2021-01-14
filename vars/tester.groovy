@@ -2,24 +2,37 @@ private def downloadJacocoIfNeeded() {
     def jacoURL = 'https://repo1.maven.org/maven2/org/jacoco/jacoco/0.8.6/jacoco-0.8.6.zip'
     def jacoZip = 'jacoco.zip'
     sh """
-		if [ ! -d ${WORKSPACE}/jacoco ]; then
-			curl -k -o ${jacoZip} ${jacoURL}
-			unzip ${jacoZip} -d ${WORKSPACE}/jacoco
-			echo "Jacoco downloaded at ${WORKSPACE}/jacoco" 
-		fi
+        if [ ! -d ${WORKSPACE}/jacoco ]; then
+            curl -k -o ${jacoZip} ${jacoURL}
+            unzip ${jacoZip} -d ${WORKSPACE}/jacoco
+            echo "Jacoco downloaded at ${WORKSPACE}/jacoco" 
+        fi
     """
-	sh "ls ${WORKSPACE}/jacoco/lib"
+    sh "ls ${WORKSPACE}/jacoco/lib"
 }
 
 def generateJacocoReport() {
     sh "mvn -Djacoco.dataFile=${WORKSPACE}/jacoco.exec org.jacoco:jacoco-maven-plugin:0.8.6:report"
 }
 
-def publishTests() {
-	junit '*.xml'
-	generateJacocoReport()
+def prepareJacocoAgentSteps() {
+    return " -Djacoco.destFile=${WORKSPACE}/jacoco.exec -Djacoco.append=true org.jacoco:jacoco-maven-plugin:0.8.6:prepare-agent "
 }
-	        		
+
+def runRcptt(String mvnProfile) {
+    // Installing ANTLR plugin in capella (required due to existing RCPTT bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=548517 )
+    def antlrRepoPath = 'https://download.eclipse.org/releases/2020-06'
+    def antlrFeatureName = 'org.antlr.runtime/3.2.0.v201101311130'
+    eclipse.installFeature('${CAPELLA_PRODUCT_PATH}', antlrRepoPath, antlrFeatureName)
+    def steps = prepareJacocoAgentSteps()
+    sh "mvn -X -e ${steps} verify ${mvnProfile}"
+}
+
+def publishTests() {
+    junit '*.xml'
+    generateJacocoReport()
+}
+
 private def getRunnerCmd(String capellaProductPath) {
   return "${capellaProductPath} " +
       "-port 8081 " +
@@ -31,7 +44,8 @@ private def getJunitCmdTemplate(String capellaProductPath, String applicationPar
   
   // extract the capella path, without the executable name
   def capellaPath = capellaProductPath.substring(0, capellaProductPath.lastIndexOf("/"))
-  def jacocoParameters = "\"-javaagent:${WORKSPACE}/jacoco/lib/jacocoagent.jar=includes=*,excludes=,exclclassloader=sun.reflect.DelegatingClassLoader,destfile=${WORKSPACE}/jacoco.exec,output=file,append=true\" "
+  def JACOCO_EXEC = "${WORKSPACE}/jacoco.exec"
+  def jacocoParameters = "\"-javaagent:${WORKSPACE}/jacoco/lib/jacocoagent.jar=includes=*,excludes=,exclclassloader=sun.reflect.DelegatingClassLoader,destfile=${JACOCO_EXEC},output=file,append=true\" "
   
   return "sleep 10 && " +
     "java " +
@@ -56,7 +70,7 @@ private def getJunitCmdTemplate(String capellaProductPath, String applicationPar
 
 
 private def getUIJunitCmd(String capellaProductPath) {
-	return getJunitCmdTemplate(capellaProductPath, 'org.eclipse.pde.junit.runtime.uitestapplication')
+    return getJunitCmdTemplate(capellaProductPath, 'org.eclipse.pde.junit.runtime.uitestapplication')
 }
 
 private def getNONUIJunitCmd(String capellaProductPath) {
