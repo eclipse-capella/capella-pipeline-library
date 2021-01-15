@@ -29,10 +29,10 @@ def runRcptt(String mvnProfile) {
 }
 
 def publishTests() {
-    junit '*.xml'
+    junit allowEmptyResults: true, testResults: '*.xml,**/target/surefire-reports/TEST-*.xml'
     generateJacocoReport()
 }
-
+   
 private def getRunnerCmd(String capellaProductPath) {
   return "${capellaProductPath} " +
       "-port 8081 " +
