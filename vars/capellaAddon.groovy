@@ -33,7 +33,7 @@ def call(body) {
 
 	tools {
 	    maven "apache-maven-latest"
-	    jdk "oracle-jdk8-latest"
+	    jdk "openjdk-jdk14-latest"
 	}
 
 	stages {
