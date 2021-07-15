@@ -13,7 +13,11 @@ def getDownloadURL(branch = "master", platform = "win", proxy = ""){
           break
       
       case ~/linux/:
-          regex = /(capella-[\d.]*-linux-gtk-x86_64.tar.gz)/
+          if (branch.startsWith('1.')) {
+              regex = /(capella-[\d.]*-linux-gtk-x86_64.zip)/
+          } else {
+            regex = /(capella-[\d.]*-linux-gtk-x86_64.tar.gz)/
+          }
           break
           
       case ~/win/:
