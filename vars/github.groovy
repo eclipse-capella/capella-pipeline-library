@@ -12,11 +12,20 @@ def getProjectName() {
 
 def pullRequestComment(message) {
   def pullRequestId = getPullRequestId()
-	def projectName = getProjectName()
+  def projectName = getProjectName()
   def apiURL = "https://api.github.com/repos/eclipse/${projectName}/issues/${pullRequestId}/comments"
   
-  withCredentials([string(credentialsId: '0dea5761-867c-44db-92fa-9304c81a8653', variable: 'password')]) {
-  	sh """curl ${apiURL} -d '{"body":"${message}"}' -u 'eclipse-capella-bot:${password}' -X POST -H 'Content-Type: application/json'"""
+  switch(projectName){
+	
+    case ~/.*kitalpha.*/:
+      withCredentials([string(credentialsId: '0f2238d4-cd8c-4322-b744-d9fc186a6cd0', variable: 'password')]) {
+        sh """curl ${apiURL} -d '{"body":"${message}"}' -u 'eclipse-kitalpha-bot:${password}' -X POST -H 'Content-Type: application/json'"""
+      }
+		
+    default:
+      withCredentials([string(credentialsId: '0dea5761-867c-44db-92fa-9304c81a8653', variable: 'password')]) {
+        sh """curl ${apiURL} -d '{"body":"${message}"}' -u 'eclipse-capella-bot:${password}' -X POST -H 'Content-Type: application/json'"""
+      }
   }
 }
 
