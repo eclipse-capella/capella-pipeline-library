@@ -41,3 +41,64 @@ def downloadMacJDK(jdkMacFolder) {
   println "Mac JDK downloaded to ${jdkMacFolder}/jre"
 	sh "ls ${jdkMacFolder}/jre"
 }
+
+/**
+ * Download Temurin JDK 17 version in <code>jdkFolder</code> folder for operating system <code>os</code>
+ * @param jdkFolder
+ * @param os The operating system. Expected one of 'win', 'linux', 'mac'
+ * @return Nothing but extracts the downloaded JDK to <code>${jdkFolder}/jre</code>.
+ */
+def downloadTemurinJDK17(jdkFolder, os) {
+    def jdk = 'jdk-17.0.1+12'
+    
+    def jdkLinuxURL = 'https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_x64_linux_hotspot_17.0.1_12.tar.gz'
+    def jdkWinURL = 'https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_x64_windows_hotspot_17.0.1_12.zip'
+    def jdkMacURL = 'https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.1%2B12/OpenJDK17U-jdk_x64_mac_hotspot_17.0.1_12.tar.gz'
+    
+    def jdkArchive = 'jdk'
+    def jdkURL = ''
+    
+    switch (os) {
+        case 'win':
+            jdkURL = jdkWinURL
+            jdkArchive += os + '.zip'
+            break;
+        case 'mac':
+            jdkURL = jdkMacURL
+            jdkArchive += os + '.tar.gz'
+            break;
+        case 'linux':
+            jdkURL = jdkLinuxURL
+            jdkArchive += os + '.tar.gz'
+            break;
+        default:
+            return;
+    }
+    
+    sh "curl -k -o ${jdkArchive} ${jdkURL}"
+    sh "mkdir ${jdkFolder}"
+    
+    def osPrint = ''
+    switch (os) {
+        case 'win':
+            sh "unzip -q ${jdkArchive} -d ${jdkFolder}"
+            osPrint = 'Win'
+            break;
+        case 'mac':
+            sh "tar xzf ${jdkArchive} -C ${jdkFolder}"
+            sh "mv ${jdkFolder}/${jdk}.jdk ${jdkFolder}/jre"
+            osPrint = 'Mac'
+            break;
+        case 'linux':
+            sh "tar xzf ${jdkArchive} -C ${jdkFolder}"
+            sh "mv ${jdkFolder}/${jdk} ${jdkFolder}/jre"
+            osPrint = 'Linux'
+            break;
+        default:
+            break;
+    }
+
+    println "${osPrint} JDK downloaded to ${jdkFolder}/jre"
+    sh "ls ${jdkFolder}/jre"
+    
+}
