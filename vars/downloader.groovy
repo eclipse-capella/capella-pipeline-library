@@ -49,8 +49,6 @@ def downloadMacJDK(jdkMacFolder) {
  * @return Nothing but extracts the downloaded JDK to <code>${jdkFolder}/jre</code>.
  */
 def downloadTemurinJDK17(jdkFolder, os) {
-    def jdk = 'jdk-17.0.1+12-jre'
-    	
     def jdkWinURL   = 'https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jre/hotspot/normal/eclipse'
     def jdkLinuxURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jre/hotspot/normal/eclipse'
     def jdkMacURL   = 'https://api.adoptium.net/v3/binary/latest/17/ga/mac/x64/jre/hotspot/normal/eclipse'
@@ -98,7 +96,7 @@ def downloadTemurinJDK17(jdkFolder, os) {
             break;
     }
     
-    sh "mv ${jdkFolder}/${jdk} ${jdkFolder}/jre"
+    sh "mv ${jdkFolder}/jdk* ${jdkFolder}/jre"
     println "${osPrint} JDK downloaded to ${jdkFolder}/jre"
     sh "ls ${jdkFolder}/jre"
     
