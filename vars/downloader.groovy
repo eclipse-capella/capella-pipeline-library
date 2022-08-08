@@ -43,21 +43,46 @@ def downloadMacJDK(jdkMacFolder) {
 }
 
 
+def fetchTemurinJRE17(name, os) {
+    def jreArchive = ''
+    def jreURL = ''
+    
+    switch (os) {
+        case 'win':
+            jreURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jre/hotspot/normal/eclipse'
+            jreArchive = name + '-' + os + '.zip'
+            break;
+        case 'mac':
+            jreURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/mac/x64/jre/hotspot/normal/eclipse'
+            jreArchive = name + '-' + os + '.tar.gz'
+            break;
+        case 'linux':
+            jreURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jre/hotspot/normal/eclipse'
+            jreArchive = name + '-' + os + '.tar.gz'
+            break;
+        default:
+            return;
+    }
+    
+    sh "curl -L -k -o ${jreArchive} ${jreURL}"
+    sh "ls -la ${jreArchive}"
+}
+
 def fetchTemurinJDK17(name, os) {
     def jdkArchive = ''
     def jdkURL = ''
     
     switch (os) {
         case 'win':
-            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jre/hotspot/normal/eclipse'
+            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk'
             jdkArchive = name + '-' + os + '.zip'
             break;
         case 'mac':
-            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/mac/x64/jre/hotspot/normal/eclipse'
+            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/mac/x64/jdk/hotspot/normal/eclipse?project=jdk'
             jdkArchive = name + '-' + os + '.tar.gz'
             break;
         case 'linux':
-            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jre/hotspot/normal/eclipse'
+            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse?project=jdk'
             jdkArchive = name + '-' + os + '.tar.gz'
             break;
         default:
@@ -67,7 +92,6 @@ def fetchTemurinJDK17(name, os) {
     sh "curl -L -k -o ${jdkArchive} ${jdkURL}"
     sh "ls -la ${jdkArchive}"
 }
-
 
 /**
  * Download Temurin JDK 17 version in <code>jdkFolder</code> folder for operating system <code>os</code>
@@ -82,16 +106,16 @@ def downloadTemurinJDK17(jdkFolder, os) {
     
     switch (os) {
         case 'win':
-            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jre17-win.zip'
-            jdkArchive = 'jre17-win.zip'
+            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jdk17-win.zip'
+            jdkArchive = 'jdk17-win.zip'
             break;
         case 'mac':
-            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jre17-mac.tar.gz'
-            jdkArchive = 'jre17-mac.tar.gz'
+            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jdk17-mac.tar.gz'
+            jdkArchive = 'jdk17-mac.tar.gz'
             break;
         case 'linux':
-            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jre17-linux.tar.gz'
-            jdkArchive = 'jre17-linux.tar.gz'
+            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jdk17-linux.tar.gz'
+            jdkArchive = 'jdk17-linux.tar.gz'
             break;
         default:
             return;
