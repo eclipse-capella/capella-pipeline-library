@@ -1,6 +1,20 @@
 def getDownloadURL(branch = "master", platform = "win", proxy = ""){
   
   def url = "https://download.eclipse.org/capella/core/products/nightly/${branch}/"
+  switch(branch){
+    case '5.2.0':
+      url = "https://download.eclipse.org/capella/core/products/releases/5.2.0-R20211130-125709/"
+      break
+    case '1.4.2':
+      url = "https://download.eclipse.org/capella/core/products/releases/1.4.2-R20201014-090868/"
+      break
+    case ~/\d\.\d\.\d/:
+      url = "https://download.eclipse.org/capella/core/products/releases/${branch}/"
+      break
+    default:
+      break
+  }
+  
   def script = proxy.isEmpty() ? "curl -ks ${url}" : "curl -ks -x ${proxy} ${url}"
   
   def html = sh(script: "${script}", returnStdout: true)
@@ -35,7 +49,16 @@ def getDownloadURL(branch = "master", platform = "win", proxy = ""){
 }
 
 def getUpdateSiteURL(branch = "master") {
-	return "https://download.eclipse.org/capella/core/updates/nightly/${branch}/"
+  switch(branch){
+    case '5.2.0':
+      return "https://download.eclipse.org/capella/core/updates/releases/5.2.0-R20211130-125709/"
+    case '1.4.2':
+      return "https://download.eclipse.org/capella/core/updates/releases/1.4.2-R20201014-090868/"
+    case ~/\d\.\d\.\d/:
+      return "https://download.eclipse.org/capella/core/updates/releases/${branch}/"
+    default:
+      return "https://download.eclipse.org/capella/core/updates/nightly/${branch}/"
+  }
 }
 
 def getTestUpdateSiteURL(branch = "master") {
