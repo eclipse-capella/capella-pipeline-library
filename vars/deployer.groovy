@@ -105,6 +105,9 @@ private def getAddonDirName() {
 		case ~/.*capella-deferred-merge.*/:
 			return 'deferredmerge'
 		
+		case ~/.*capella-vpms.*/:
+			return 'vpms'
+			 
 		default:
 				return ''
 	}
