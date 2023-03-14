@@ -81,6 +81,25 @@ def addonNightlyProduct(String inputPath, String outputDirName) {
 	}
 }
 
+def cleanAddonNightlyArtefacts(String outputDirName) {
+	def addonDirName = getAddonDirName()
+	
+	if(addonDirName.isEmpty()) {
+		log.error("Deployment Error: ${GIT_URL} repository is not recognised")
+	}
+	else {		
+		def dropinPath = getFullAddonDropinsPath(addonDirName, outputDirName)
+		def updateSitePath = getFullAddonDropinsUpdateSitePath(addonDirName, outputDirName)
+		def sshAccount = getSSHAccount()
+		
+		sshagent (['projects-storage.eclipse.org-bot-ssh']) {
+			sh "ssh ${sshAccount} rm -rf ${dropinPath}"
+			sh "ssh ${sshAccount} rm -rf ${updateSitePath}"
+		}
+	}
+}
+
+
 /**
  * Extracts the addon directory name from the git branch.
  */
@@ -108,6 +127,9 @@ private def getAddonDirName() {
 		case ~/.*capella-vpms.*/:
 			return 'vpms'
 			 
+		case ~/.*capella-xhtml-docgen.*/:
+			return 'xhtmldocgen'
+		
 		default:
 				return ''
 	}
