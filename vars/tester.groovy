@@ -49,7 +49,6 @@ private def getJunitCmdTemplate(String capellaProductPath, String applicationPar
   
   return "sleep 10 && " +
     "java " +
-      "${jacocoParameters} " +
       "-Xms1024m -Xmx3000m " +
       "-ea -da:org.eclipse.emf.common.util.URI " + // bug GMF 438712
       "-Declipse.p2.data.area=@config.dir/../p2 " +
