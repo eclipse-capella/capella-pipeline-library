@@ -49,7 +49,8 @@ private def getJunitCmdTemplate(String capellaProductPath, String applicationPar
   
   return "sleep 10 && " +
     "java " +
-      "-Xms1024m -Xmx3000m " +
+      "-Xms1024m -Xmx3500m " +
+      "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${WORKSPACE}/memory_dump.log -XX:OnOutOfMemoryError='dmesg > ${WORKSPACE}/memory_dump2.log' " +
       "-ea -da:org.eclipse.emf.common.util.URI " + // bug GMF 438712
       "-Declipse.p2.data.area=@config.dir/../p2 " +
       "-Dfile.encoding=Cp1252 " +
