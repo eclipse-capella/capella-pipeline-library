@@ -2,6 +2,12 @@ def getDownloadURL(branch = "master", platform = "win", proxy = ""){
   
   def url = "https://download.eclipse.org/capella/core/products/nightly/${branch}/"
   switch(branch){
+    case '6.0.0':
+      url = "https://download.eclipse.org/capella/core/products/releases/6.1.0/"
+      break
+    case '6.1.0':
+      url = "https://download.eclipse.org/capella/core/products/releases/6.1.0/"
+      break
     case '5.2.0':
       url = "https://download.eclipse.org/capella/core/products/releases/5.2.0-R20211130-125709/"
       break
@@ -50,6 +56,10 @@ def getDownloadURL(branch = "master", platform = "win", proxy = ""){
 
 def getUpdateSiteURL(branch = "master") {
   switch(branch){
+    case '6.0.0':
+      return "https://download.eclipse.org/capella/core/updates/releases/6.0.0/"
+    case '6.1.0':
+      return "https://download.eclipse.org/capella/core/updates/releases/6.1.0/"
     case '5.2.0':
       return "https://download.eclipse.org/capella/core/updates/releases/5.2.0-R20211130-125709/"
     case '1.4.2':
