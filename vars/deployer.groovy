@@ -144,6 +144,9 @@ private def getAddonDirName() {
 		case ~/.*capella-requirements-vp.*/:
 				return 'requirements'
 		
+		case ~/.*capella-basic-vp.*/:
+				return 'basic'
+		
 		case ~/.*capella-filtering.*/:
 				return 'filtering'
 				
