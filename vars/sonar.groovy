@@ -1,6 +1,6 @@
 
 
-def runSonar(String sonarProjectKey, String githubRepository, String sonarLoginToken, javaVersion = "8"){
+def runSonar(String sonarProjectKey, String githubRepository, String sonarLoginToken, javaVersion = "17"){
 	withCredentials([string(credentialsId: "${sonarLoginToken}", variable: 'SONARCLOUD_TOKEN')]) {
 		withEnv(['MAVEN_OPTS=-Xmx4g']) {
 			def jacocoParameters = "-Dsonar.java.coveragePlugin=jacoco -Dsonar.core.codeCoveragePlugin=jacoco "
