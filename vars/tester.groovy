@@ -1,5 +1,5 @@
 private def downloadJacocoIfNeeded() {
-    def jacoURL = 'https://repo1.maven.org/maven2/org/jacoco/jacoco/0.8.6/jacoco-0.8.6.zip'
+    def jacoURL = 'https://repo1.maven.org/maven2/org/jacoco/jacoco/0.8.10/jacoco-0.8.10.zip'
     def jacoZip = 'jacoco.zip'
     sh """
         if [ ! -d ${WORKSPACE}/jacoco ]; then
@@ -12,11 +12,11 @@ private def downloadJacocoIfNeeded() {
 }
 
 def generateJacocoReport() {
-    sh "mvn -Djacoco.dataFile=${WORKSPACE}/jacoco.exec org.jacoco:jacoco-maven-plugin:0.8.6:report"
+    sh "mvn -Djacoco.dataFile=${WORKSPACE}/jacoco.exec org.jacoco:jacoco-maven-plugin:0.8.10:report"
 }
 
 def prepareJacocoAgentSteps() {
-    return " -Djacoco.destFile=${WORKSPACE}/jacoco.exec -Djacoco.append=true org.jacoco:jacoco-maven-plugin:0.8.6:prepare-agent "
+    return " -Djacoco.destFile=${WORKSPACE}/jacoco.exec -Djacoco.append=true org.jacoco:jacoco-maven-plugin:0.8.10:prepare-agent "
 }
 
 def runRcptt(String mvnProfile) {
@@ -49,11 +49,12 @@ private def getJunitCmdTemplate(String capellaProductPath, String applicationPar
   
   return "sleep 10 && " +
     "java " +
-      "${jacocoParameters}" +
-      "-Xms1024m -Xmx3500m -XX:+CMSClassUnloadingEnabled " +
+      "-Xms1024m -Xmx3500m " +
+      "-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${WORKSPACE}/memory_dump.log -XX:OnOutOfMemoryError='dmesg > ${WORKSPACE}/memory_dump2.log' " +
       "-ea -da:org.eclipse.emf.common.util.URI " + // bug GMF 438712
       "-Declipse.p2.data.area=@config.dir/../p2 " +
       "-Dfile.encoding=Cp1252 " +
+      "-Dlogback.configurationFile=${capellaPath}/configuration/logback.xml " + 
       "-classpath ${capellaPath}/plugins/org.eclipse.equinox.launcher_*.jar org.eclipse.equinox.launcher.Main " +
       "-os linux " +
       "-ws gtk " +
