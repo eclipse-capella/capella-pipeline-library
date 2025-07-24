@@ -2,11 +2,17 @@ def getDownloadURL(branch = "master", platform = "win", proxy = ""){
   
   def url = "https://download.eclipse.org/capella/core/products/nightly/${branch}/"
   switch(branch){
-    case '6.0.0':
-      url = "https://download.eclipse.org/capella/core/products/releases/6.0.0/"
+    case '7.0.1':
+      url = "https://download.eclipse.org/capella/core/products/releases/7.0.1/"
+      break
+    case '7.0.0':
+      url = "https://download.eclipse.org/capella/core/products/releases/7.0.0/"
       break
     case '6.1.0':
       url = "https://download.eclipse.org/capella/core/products/releases/6.1.0/"
+      break
+    case '6.0.0':
+      url = "https://download.eclipse.org/capella/core/products/releases/6.0.0/"
       break
     case '5.2.0':
       url = "https://download.eclipse.org/capella/core/products/releases/5.2.0-R20211130-125709/"
