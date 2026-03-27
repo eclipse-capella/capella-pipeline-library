@@ -23,7 +23,7 @@ def runRcptt(String mvnProfile) {
     // Installing ANTLR plugin in capella (required due to existing RCPTT bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=548517 )
     def antlrRepoPath = 'https://download.eclipse.org/releases/2020-06'
     def antlrFeatureName = 'org.antlr.runtime/3.2.0.v201101311130'
-    eclipse.installFeature('${CAPELLA_PRODUCT_PATH}', antlrRepoPath, antlrFeatureName)
+    eclipse.installFeature('${CAPELLA_PRODUCT_PATH}', antlrRepoPath, antlrFeatureName, "-Dlogback.configurationFile=${CAPELLA_PRODUCT_PATH}/configuration/logback.xml")
     def steps = prepareJacocoAgentSteps()
     sh "mvn -X -e ${steps} verify ${mvnProfile}"
 }
