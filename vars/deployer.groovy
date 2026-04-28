@@ -161,7 +161,10 @@ private def getAddonDirName() {
 			 
 		case ~/.*capella-xhtml-docgen.*/:
 			return 'xhtmldocgen'
-		
+
+		case ~/.*capella-simulink-connector.*/:
+			return 'capella-simulink-connector'
+
 		default:
 				return ''
 	}
