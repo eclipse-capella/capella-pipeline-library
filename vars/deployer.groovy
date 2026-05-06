@@ -28,6 +28,7 @@ def capellaNightlyUpdateSite(String inputPath, String outputDirName) {
 	}
 }
 
+
 def cleanCapellaNightlyArtefacts(String dirName) {
 	if (isInvalid(dirName)) {
 		log.error("Deployment Error: ${dirName} is not recognised")
@@ -182,6 +183,10 @@ private def getFullCapellaProductPath(String dirName) {
   return "/home/data/httpd/download.eclipse.org/capella/core/products/nightly/${dirName}/"
 }
 
+def private getCapellaJDKPath() {
+  return "/home/data/httpd/download.eclipse.org/capella/releng/.jdk/"
+}
+
 private def getFullCapellaUpdateSitePath(String dirName) {
   return "/home/data/httpd/download.eclipse.org/capella/core/updates/nightly/${dirName}/"
 }
@@ -196,4 +201,14 @@ private def getFullAddonDropinsUpdateSitePath(String rootDirName, String dirName
 
 private def getFullAddonProductPath(String rootDirName, String dirName) {
 	return "/home/data/httpd/download.eclipse.org/capella/addons/${addonDirName}/products/nightly/${dirName}/"
+}
+
+def uploadCapellaJDK(String inputPath) {
+	def outputPath = getCapellaJDKPath()
+	def sshAccount = getSSHAccount()
+  
+	sshagent (['projects-storage.eclipse.org-bot-ssh']) {
+		sh "ssh ${sshAccount} mkdir -p ${outputPath}"
+		sh "scp -rp ${inputPath} ${sshAccount}:${outputPath}"
+	}	
 }

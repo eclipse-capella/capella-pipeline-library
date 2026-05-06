@@ -42,40 +42,6 @@ def downloadMacJDK(jdkMacFolder) {
 	sh "ls ${jdkMacFolder}/jre"
 }
 
-
-def fetchTemurinJRE17(name, os) {
-    def jreArchive = ''
-    def jreURL = ''
-    
-    switch (os) {
-        case 'win':
-            jreURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jre/hotspot/normal/eclipse'
-            jreArchive = name + '-' + os + '.zip'
-            break;
-        case 'mac':
-            jreURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/mac/x64/jre/hotspot/normal/eclipse'
-            jreArchive = name + '-' + os + '.tar.gz'
-            break;
-	case 'mac-aarch64':
-            jreURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/mac/aarch64/jre/hotspot/normal/eclipse'
-            jreArchive = name + '-' + os + '.tar.gz'
-            break;
-        case 'linux':
-            jreURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jre/hotspot/normal/eclipse'
-            jreArchive = name + '-' + os + '.tar.gz'
-            break;
-	case 'linux-aarch64':
-            jreURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/aarch64/jre/hotspot/normal/eclipse'
-            jreArchive = name + '-' + os + '.tar.gz'
-            break;
-        default:
-            return;
-    }
-    
-    sh "curl -L -k -o ${jreArchive} ${jreURL}"
-    sh "ls -la ${jreArchive}"
-}
-
 def fetchTemurinJDK17(name, os) {
     def jdkArchive = ''
     def jdkURL = ''
@@ -107,6 +73,8 @@ def fetchTemurinJDK17(name, os) {
     
     sh "curl -L -k -o ${jdkArchive} ${jdkURL}"
     sh "ls -la ${jdkArchive}"
+    deployer.uploadCapellaJDK(jdkArchive)
+	sh "rm ${jdkArchive}"
 }
 
 /**
@@ -118,33 +86,28 @@ def fetchTemurinJDK17(name, os) {
 def downloadTemurinJDK17(jdkFolder, os) {
     
     def jdkArchive = ''
-    def jdkURL = ''
-    
+    def jdkURL = getCapellaJDKPath()
     switch (os) {
         case 'win':
-            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jdk17-win.zip'
             jdkArchive = 'jdk17-win.zip'
             break;
         case 'mac':
-            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jdk17-mac.tar.gz'
             jdkArchive = 'jdk17-mac.tar.gz'
             break;
         case 'mac-aarch64':
-            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jdk17-mac-aarch64.tar.gz'
             jdkArchive = 'jdk17-mac-aarch64.tar.gz'
             break;
         case 'linux':
-            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jdk17-linux.tar.gz'
             jdkArchive = 'jdk17-linux.tar.gz'
             break;
         case 'linux-aarch64':
-            jdkURL = 'https://ci.eclipse.org/capella/job/prefetch-java/lastSuccessfulBuild/artifact/jdk17-linux-aarch64.tar.gz'
             jdkArchive = 'jdk17-linux-aarch64.tar.gz'
             break;
         default:
             return;
     }
-    copyArtifacts filter: '${jdkArchive}', fingerprintArtifacts: true, projectName: 'prefetch-java', selector: lastSuccessful()
+    
+    sh "curl -L -k -o ${jdkArchive} ${jdkURL}${jdkArchive}"
     sh "ls -la ${jdkArchive}"
     
     switch (os) {
@@ -175,4 +138,8 @@ def downloadTemurinJDK17(jdkFolder, os) {
     println "${os} JDK downloaded to ${jdkFolder}/jre"
     sh "ls ${jdkFolder}/jre"
     
+}
+
+def private getCapellaJDKPath() {
+  return "https://download.eclipse.org/capella/releng/.jdk/"
 }
