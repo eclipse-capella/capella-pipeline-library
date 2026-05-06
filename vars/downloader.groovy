@@ -144,8 +144,7 @@ def downloadTemurinJDK17(jdkFolder, os) {
         default:
             return;
     }
-    
-    sh "curl -L -k -o ${jdkArchive} ${jdkURL}"
+    copyArtifacts filter: '${jdkArchive}', fingerprintArtifacts: true, projectName: 'prefetch-java', selector: lastSuccessful()
     sh "ls -la ${jdkArchive}"
     
     switch (os) {
