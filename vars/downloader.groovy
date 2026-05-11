@@ -43,33 +43,47 @@ def downloadMacJDK(jdkMacFolder) {
 }
 
 def fetchTemurinJDK17(name, os) {
-    def jdkArchive = ''
-    def jdkURL = ''
+    fetchTemurinJDK(name, 17,os)
+}
+
+/**
+ * Prefetch the latest patch of the specified JDK version. To be used by the prefetch job to save a JDK zip file in a job's area.
+ * 
+ * @param version The major version for which we need the latest available patch. Use https://api.adoptium.net/v3/info/available_releases to determine allowed versions.
+ * @param name The name of this JDK version, which will be used to name the pre-fetched zip file.
+ * @param os The OS for which we're fetching a JDK.
+ */
+def fetchTemurinJDK(version, name, os) {
+    def path = ''
+    def extension = ''
     
     switch (os) {
         case 'win':
-            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk'
-            jdkArchive = name + '-' + os + '.zip'
+            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk'
+            extension = '.zip'
             break;
         case 'mac':
-            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/mac/x64/jdk/hotspot/normal/eclipse?project=jdk'
-            jdkArchive = name + '-' + os + '.tar.gz'
+            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/mac/x64/jdk/hotspot/normal/eclipse?project=jdk'
+            extension = '.tar.gz'
             break;
         case 'mac-aarch64':
-            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/mac/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
-            jdkArchive = name + '-' + os + '.tar.gz'
+            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/mac/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
+            extension = '.tar.gz'
             break;	    
         case 'linux':
-            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse?project=jdk'
-            jdkArchive = name + '-' + os + '.tar.gz'
+            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/linux/x64/jdk/hotspot/normal/eclipse?project=jdk'
+            extension = '.tar.gz'
             break;
         case 'linux-aarch64':
-            jdkURL = 'https://api.adoptium.net/v3/binary/latest/17/ga/linux/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
-            jdkArchive = name + '-' + os + '.tar.gz'
+            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/linux/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
+            extension = '.tar.gz'
             break; 
         default:
             return;
     }
+    
+    def jdkURL = 'https://api.adoptium.net/v3/binary/latest/' + version + path
+    def jdkArchive = name + '-' + os + extension
     
     sh "curl -L -k -o ${jdkArchive} ${jdkURL}"
     sh "ls -la ${jdkArchive}"
@@ -84,28 +98,40 @@ def fetchTemurinJDK17(name, os) {
  * @return Nothing but extracts the downloaded JDK to <code>${jdkFolder}/jre</code>.
  */
 def downloadTemurinJDK17(jdkFolder, os) {
-    
-    def jdkArchive = ''
-    def jdkURL = getCapellaJDKPath()
+    retrieveTemurinJDK(jdkFolder, 17, os)
+}
+
+/**
+ * Retrieves the specified JDK from the pre-fetch job. This will unzip the specified JDK inside the "${jdkFolder}/jre" folder of the calling job.
+ *
+ * @param jdkFolder The folder in which to unzip the JDK.
+ * @param version The major version for which we need the latest pre-fetched zip.
+ * @param os The OS for which we need the pre-fetched zip.
+ */
+def retrieveTemurinJDK(jdkFolder, version, os) {
+    def extension = ''
     switch (os) {
         case 'win':
-            jdkArchive = 'jdk17-win.zip'
+            extension = '.zip'
             break;
         case 'mac':
-            jdkArchive = 'jdk17-mac.tar.gz'
+            extension = '.tar.gz'
             break;
         case 'mac-aarch64':
-            jdkArchive = 'jdk17-mac-aarch64.tar.gz'
+            extension = '.tar.gz'
             break;
         case 'linux':
-            jdkArchive = 'jdk17-linux.tar.gz'
+            extension = '.tar.gz'
             break;
         case 'linux-aarch64':
-            jdkArchive = 'jdk17-linux-aarch64.tar.gz'
+            extension = '.tar.gz'
             break;
         default:
             return;
     }
+    
+    def jdkURL = getCapellaJDKPath()
+    def jdkArchive = 'jdk' + version + '-' + os + extension
     
     sh "curl -L -k -o ${jdkArchive} ${jdkURL}${jdkArchive}"
     sh "ls -la ${jdkArchive}"
@@ -118,7 +144,7 @@ def downloadTemurinJDK17(jdkFolder, os) {
             sh "mkdir ${jdkFolder}"
             sh "tar xzf ${jdkArchive} -C ${jdkFolder}"
             break;
-	case 'mac-aarch64':
+        case 'mac-aarch64':
             sh "mkdir ${jdkFolder}"
             sh "tar xzf ${jdkArchive} -C ${jdkFolder}"
             break;
@@ -137,7 +163,6 @@ def downloadTemurinJDK17(jdkFolder, os) {
     sh "mv ${jdkFolder}/jdk* ${jdkFolder}/jre"
     println "${os} JDK downloaded to ${jdkFolder}/jre"
     sh "ls ${jdkFolder}/jre"
-    
 }
 
 def private getCapellaJDKPath() {
