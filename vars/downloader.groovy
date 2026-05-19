@@ -59,23 +59,23 @@ def fetchTemurinJDK(version, name, os) {
     
     switch (os) {
         case 'win':
-            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk'
+            path = '/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk'
             extension = '.zip'
             break;
         case 'mac':
-            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/mac/x64/jdk/hotspot/normal/eclipse?project=jdk'
+            path = '/ga/mac/x64/jdk/hotspot/normal/eclipse?project=jdk'
             extension = '.tar.gz'
             break;
         case 'mac-aarch64':
-            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/mac/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
+            path = '/ga/mac/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
             extension = '.tar.gz'
             break;	    
         case 'linux':
-            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/linux/x64/jdk/hotspot/normal/eclipse?project=jdk'
+            path = '/ga/linux/x64/jdk/hotspot/normal/eclipse?project=jdk'
             extension = '.tar.gz'
             break;
         case 'linux-aarch64':
-            path = 'https://api.adoptium.net/v3/binary/latest/' + version + '/ga/linux/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
+            path = '/ga/linux/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
             extension = '.tar.gz'
             break; 
         default:
