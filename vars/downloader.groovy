@@ -43,7 +43,7 @@ def downloadMacJDK(jdkMacFolder) {
 }
 
 def fetchTemurinJDK17(name, os) {
-    fetchTemurinJDK(name, 17,os)
+    fetchTemurinJDK(17, name, os)
 }
 
 /**
