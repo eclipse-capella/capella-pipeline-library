@@ -7,8 +7,8 @@ def call(String productsDirectory, List<String> dmgPatterns) {
             || productsDirectory.contains('\u0000')) {
         error('Expected a products directory')
     }
-    if (!dmgPatterns || dmgPatterns.any { !(it instanceof String) || !it
-            || it.contains('/') || it.contains('\n') || it.contains('\r') || it.contains('\u0000') }) {
+    if (!dmgPatterns || dmgPatterns.any { !(it instanceof String) || !it ||
+            it.contains('/') || it.contains('\n') || it.contains('\r') || it.contains('\u0000') }) {
         error('Expected a nonempty list of DMG basename patterns')
     }
     // Resolve relative products paths before changing to the temporary directory.
