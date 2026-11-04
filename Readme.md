@@ -51,3 +51,42 @@ tee and sleep utilities. The existing EPP script is kept byte-for-byte in
 `resources/macos/macosx-notarization-single.sh`, with its EPL-2.0 attribution.
 No additional Jenkins plugins are required beyond the existing Pipeline and
 shared-library steps. Publish this library change before enabling the callers.
+
+
+## Product checksums
+
+Call `generateProductChecksums(productsDirectory)` after macOS notarization to
+validate the final products, replace previous checksums, generate SHA-256 and
+SHA-512 results, verify both manifests, and archive the results in Jenkins.
+The caller keeps the PR condition visible:
+
+```groovy
+stage('Generate product checksums') {
+    when { expression { !github.isPullRequest() } }
+    steps {
+        generateProductChecksums(
+            "${WORKSPACE}/releng/plugins/org.polarsys.capella.rcp.product/target/products"
+        )
+    }
+}
+```
+
+The directory can be absolute or relative to the current workspace directory.
+It must contain one nonempty Windows x86_64 ZIP, Linux x86_64 and aarch64 tar.gz,
+and macOS x86_64 and aarch64 DMG. Legacy macOS tar.gz files are excluded.
+The step removes previous top-level `.md5`, `.sha1`, `.sha256`, `.sha512`,
+`SHA256SUMS` and `SHA512SUMS` files before generating the new results.
+
+Each product receives `.sha256` and `.sha512` files containing the digest alone.
+`SHA256SUMS` and `SHA512SUMS` list the five filenames in sorted order, with relative
+names suitable for `sha256sum --check SHA256SUMS` and
+`sha512sum --check SHA512SUMS`. Only successfully verified results are archived;
+publication remains the caller's responsibility.
+
+The pinned `checksum-maven-plugin:1.11` runs through a standalone library resource,
+without rebuilding Capella or resolving its Tycho target platform. Temporary
+scripts and the descriptor are removed on success or failure. The EPP notarizer
+is unchanged; its intermediate checksums are replaced by this step.
+
+Required agent tools: Maven, Bash 4.4+, sha256sum, sha512sum, mktemp and rm.
+Publish this shared-library change before using the new call in Capella.
