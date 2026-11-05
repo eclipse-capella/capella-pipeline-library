@@ -1,5 +1,5 @@
 private def downloadJacocoIfNeeded() {
-    def jacoURL = 'https://repo1.maven.org/maven2/org/jacoco/jacoco/0.8.10/jacoco-0.8.10.zip'
+    def jacoURL = 'https://repo1.maven.org/maven2/org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip'
     def jacoZip = 'jacoco.zip'
     sh """
         if [ ! -d ${WORKSPACE}/jacoco ]; then
@@ -12,11 +12,11 @@ private def downloadJacocoIfNeeded() {
 }
 
 def generateJacocoReport() {
-    sh "mvn -Djacoco.dataFile=${WORKSPACE}/jacoco.exec org.jacoco:jacoco-maven-plugin:0.8.10:report"
+    sh "mvn -Djacoco.dataFile=${WORKSPACE}/jacoco.exec org.jacoco:jacoco-maven-plugin:0.8.12:report"
 }
 
 def prepareJacocoAgentSteps() {
-    return " -Djacoco.destFile=${WORKSPACE}/jacoco.exec -Djacoco.append=true org.jacoco:jacoco-maven-plugin:0.8.10:prepare-agent "
+    return " -Djacoco.destFile=${WORKSPACE}/jacoco.exec -Djacoco.append=true org.jacoco:jacoco-maven-plugin:0.8.12:prepare-agent "
 }
 
 def runRcptt(String mvnProfile) {
